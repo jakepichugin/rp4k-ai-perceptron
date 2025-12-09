@@ -81,11 +81,11 @@ def train_model():
         model = Perceptron().to(device)
 
     criterion = nn.MSELoss() # bianary cross-entropy loss || set value to 0 or 1, making a binary output
-    optimizer = optim.SGD(model.parameters(), lr=0.9) # lr is learning rate
+    optimizer = optim.SGD(model.parameters(), lr=0.5) # lr is learning rate
 
 
-    #Train on the models on 500 generation
-    epochs = 500
+
+    epochs = 10000 #number of training attempts
     for epoch in range(epochs):
         outputs = model(inputs) # passing the inputs through the model...this is calling he forward function(Perceptron)
         loss = criterion(outputs, desired_outputs) #calculate the avg loss across all the points of this epoch
