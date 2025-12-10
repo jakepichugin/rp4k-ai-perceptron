@@ -43,21 +43,16 @@ def onclick(event):
 class Perceptron(nn.Module): # Perceptron is a child of nn.module
     def __init__(self):
         super(Perceptron, self).__init__() #override parent constructor
-        self.fc1 = nn.Linear(2, 50)
-        self.fc2 = nn.Linear(50, 50)
-        self.fc3 = nn.Linear(50, 25)
-        self.fcOut = nn.Linear(25, 1)
+        self.fc1 = nn.Linear(2, 25)
+        self.fc2 = nn.Linear(25, 5)
+        self.fcOut = nn.Linear(5, 1)
         #self.fc = nn.Linear(2, 1) # creating a single layer of the neural network with 2 inputs and 1 output
 
     def forward(self, x): # x is the input tensor, that takes both the x and y
         #sending our weights bias through the activation function to get a number between 0 and 1
-        z = torch.sigmoid(self.fc1(x))
-        y = torch.sigmoid(self.fc2(z))
-        v = torch.sigmoid(self.fc3(y))
-        # b = torch.sigmoid(self.fc4(v))
-        # n = torch.sigmoid(self.fc5(b))
-        # m = torch.sigmoid(self.fc6(n))
-        return torch.sigmoid(self.fcOut(v)) # sigmoid activation function for rapidly moves between 0 and 1
+        z = torch.tanh(self.fc1(x))
+        y = torch.tanh(self.fc2(z))
+        return torch.sigmoid(self.fcOut(y)) # sigmoid activation function for rapidly moves between 0 and 1
 
 def train_model():
      # make sure to use model
@@ -81,11 +76,11 @@ def train_model():
         model = Perceptron().to(device)
 
     criterion = nn.MSELoss() # bianary cross-entropy loss || set value to 0 or 1, making a binary output
-    optimizer = optim.SGD(model.parameters(), lr=0.5) # lr is learning rate
+    optimizer = optim.SGD(model.parameters(), lr=2) # lr is learning rate
+    # optimizer = optim.Adam(model.parameters(), lr=0.1)  similar results
 
 
-
-    epochs = 10000 #number of training attempts
+    epochs = 500 #number of training attempts
     for epoch in range(epochs):
         outputs = model(inputs) # passing the inputs through the model...this is calling he forward function(Perceptron)
         loss = criterion(outputs, desired_outputs) #calculate the avg loss across all the points of this epoch
@@ -100,7 +95,8 @@ def train_model():
             plot_decision_boundary(model, position_min, position_max)
             # fig.canvas.draw()
             fig.canvas.flush_events()
-            # time.sleep(0.5)
+            #plt.pause(0.25) also works
+            time.sleep(0.1)
 
 
     # plot_decision_boundary(model, position_min, position_max)
